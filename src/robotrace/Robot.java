@@ -4,6 +4,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import javax.media.opengl.GL2;
 import static javax.media.opengl.GL2GL3.*;
 import javax.media.opengl.glu.GLU;
+import java.nio.FloatBuffer;
 
 /**
 * Represents a Robot, to be implemented according to the Assignments.
@@ -17,7 +18,7 @@ class Robot {
     public Vector direction = new Vector(1, 0, 0);
 
     /** The material from which this robot is built. */
-    private final Material material;
+    public final Material material;
     
     /** The parts of the Robot **/
     private String head, arms, torso, legs;
@@ -42,30 +43,37 @@ class Robot {
      */
     public void draw(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim) {
         gl.glPushMatrix();
-        
-        gl.glColor3f(1f, 0f, 1f);
+        gl.glMaterialfv(GL_FRONT_AND_BACK, gl.GL_DIFFUSE, FloatBuffer.wrap(material.diffuse));
+        gl.glMaterialfv(GL_FRONT_AND_BACK, gl.GL_SPECULAR, FloatBuffer.wrap(material.specular));
+        gl.glMaterialf(GL_FRONT_AND_BACK, gl.GL_SHININESS, material.shininess);
         gl.glTranslated(position.x(), position.y(), position.z());
-        gl.glPushMatrix();
-            gl.glScalef(1f, 1f, 1.5f);
-            glut.glutSolidCube(1.2f);
-        gl.glPopMatrix();
         switch(head) {
-            case "wall-e" : Legs.walle(gl, glu, glut, stickFigure, tAnim);
-                            Arms.walle(gl, glu, glut, stickFigure, tAnim);
+//            case "wall-e" : Head.walle(gl, glu, glut, stickFigure, tAnim);
+            case "stick" : Head.stick(gl, glu, glut, stickFigure, tAnim);
+                break;
+            case "weird" : Head.weird(gl, glu, glut, stickFigure, tAnim);
+                break;
         }
         switch(arms) {
-            case "wall-e" : Legs.walle(gl, glu, glut, stickFigure, tAnim);
-                            Arms.walle(gl, glu, glut, stickFigure, tAnim);
+            case "wall-e" : Arms.walle(gl, glu, glut, stickFigure, tAnim);
+                break;
+            case "stick" : Arms.stick(gl, glu, glut, stickFigure, tAnim);
+                break;
+            case "weird" : Arms.weird(gl, glu, glut, stickFigure, tAnim);
         }
         switch(torso) {
-            case "wall-e" : Legs.walle(gl, glu, glut, stickFigure, tAnim);
-                            Arms.walle(gl, glu, glut, stickFigure, tAnim);
+            case "wall-e" : break;
+            case "stick"  : Torso.stick(gl, glu, glut, stickFigure, tAnim);
+                break;
+            case "weird" : Torso.weird(gl, glu, glut, stickFigure, tAnim);
         }
         switch(legs) {
             case "wall-e" : Legs.walle(gl, glu, glut, stickFigure, tAnim);
-                            Arms.walle(gl, glu, glut, stickFigure, tAnim);
+                break;
+            case "stick"  : Legs.stick(gl, glu, glut, stickFigure, tAnim);
+                break;
+            case "weird"  : Legs.weird(gl, glu,glut, stickFigure, tAnim);
         }
-        
         
         gl.glPopMatrix();
     }
@@ -356,6 +364,79 @@ class Legs{
             gl.glPopMatrix();
         gl.glPopMatrix();
     }
+    static void stick(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        //stickfigure draws from center of torso to center of limb
+        if(stickFigure){
+            gl.glColor3f(0, 0, 0);
+            gl.glBegin(GL_LINES);
+                gl.glVertex3f(0, 0, 1.5f);
+                gl.glVertex3f(0.175f, 0, 0.5f);
+                gl.glVertex3f(0, 0, 1.5f);
+                gl.glVertex3f(-0.175f, 0, 0.5f);
+            gl.glEnd();
+        } else {
+            gl.glColor3f(0.8f, 0, 0);
+            gl.glPushMatrix();
+                //translate to left leg position
+                gl.glTranslatef(-0.175f, 0, 0.5f);
+                stickleg(gl, glu, glut, stickFigure, tAnim);
+            gl.glPopMatrix();
+            gl.glPushMatrix();
+                gl.glTranslatef(0.175f, 0, 0.5f);
+                stickleg(gl, glu, glut, stickFigure, tAnim);
+            gl.glPopMatrix();
+        }
+    }
+    static void stickleg(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim) {
+        gl.glScalef(0.15f, 0.15f, 1f);
+        glut.glutSolidCube(1f);
+    }
+
+    public static void weird(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim) {
+        if(stickFigure){
+            gl.glColor3f(0, 0, 0);
+            gl.glBegin(GL_LINES);
+            for(float i = 0; i<2; i += 0.25){
+                gl.glVertex3f(0, 0, 0.5f);
+                gl.glVertex3f(0.3f, 0.9f-i, 0.35f);
+                gl.glVertex3f(0.3f, 0.9f-i, 0.35f);
+                gl.glVertex3f(0.443f, 0.9f-i, 0.126f);
+                gl.glVertex3f(0, 0, 0.5f);
+                gl.glVertex3f(-0.3f, 0.9f-i, 0.35f);
+                gl.glVertex3f(-0.3f, 0.9f-i, 0.35f);
+                gl.glVertex3f(-0.443f, 0.9f-i, 0.126f);
+            }
+            gl.glEnd();
+
+        } else {
+            gl.glPushMatrix();
+                weirdlegs(gl, glu, glut, stickFigure, tAnim);
+                gl.glRotatef(180, 0, 0, 1);
+                weirdlegs(gl, glu, glut, stickFigure, tAnim);
+            gl.glPopMatrix();
+        }
+    }
+
+    static void weirdlegs(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        gl.glPushMatrix();
+            gl.glTranslatef(0.3f, 0.9f, 0.35f);
+            for(int i = 0; i < 8; i++){
+                gl.glPushMatrix();
+                    gl.glRotatef(-60, 0, 1, 0);
+                    gl.glPushMatrix();
+                        gl.glScalef(0.05f, 0.05f, 0.3f);
+                        glut.glutSolidCube(1);
+                    gl.glPopMatrix();
+                    gl.glTranslatef(0, 0, -0.15f);
+                    gl.glRotatef(45, 0, 1, 0);
+                    gl.glTranslatef(-0.008f, 0, -0.132f);
+                    gl.glScalef(0.05f, 0.05f, 0.3f);
+                    glut.glutSolidCube(1);
+                gl.glPopMatrix();
+                gl.glTranslatef(0, -0.25f, 0);
+            }
+        gl.glPopMatrix();
+    }
 }
 
 class Arms{
@@ -438,5 +519,144 @@ class Arms{
                 gl.glPopMatrix();
             gl.glPopMatrix();
         gl.glPopMatrix();
+    }
+    static void stick(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        if(stickFigure) {
+            gl.glColor3f(0, 0, 0);
+            gl.glBegin(GL_LINES);
+                gl.glVertex3f(0, 0, 1.5f);
+                gl.glVertex3f(0.3f, 0, 1.8f);
+                gl.glVertex3f(0, 0, 1.5f);
+                gl.glVertex3f(-0.3f, 0, 1.8f);
+            gl.glEnd();
+        } else {
+            gl.glColor3f(0.3f, 0.3f, 0);
+            gl.glPushMatrix();
+                gl.glTranslatef(0.3f, 0, 1.8f);
+                gl.glRotatef(45, 0, 1, 0);
+                gl.glScalef(0.1f, 0.1f, 0.5f);
+                glut.glutSolidCube(1);
+            gl.glPopMatrix();
+            gl.glPushMatrix();
+                gl.glTranslatef(-0.3f, 0, 1.8f);
+                gl.glRotatef(-45, 0, 1, 0);
+                gl.glScalef(0.1f, 0.1f, 0.5f);
+                glut.glutSolidCube(1);
+            gl.glPopMatrix();
+        }
+    }
+    static void weird(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        //Has a tail for arms
+        if(stickFigure){
+            gl.glColor3f(0, 0, 0);
+            gl.glBegin(GL_LINES);
+                //body-tail
+                gl.glVertex3f(0, 0, 0.5f);
+                gl.glVertex3f(0, -1, 0.5f);
+                gl.glVertex3f(0, -1, 0.5f);
+                gl.glVertex3f(0, -1.3f, 0.4f);
+                gl.glVertex3f(0, -1.3f, 0.4f);
+                gl.glVertex3f(0, -1.5f, 0.3f);
+                gl.glVertex3f(0, -1.5f, 0.3f);
+                gl.glVertex3f(0, -1.575f, 0.225f);
+            gl.glEnd();
+        } else {
+            gl.glPushMatrix();
+                gl.glTranslatef(0, -1, 0.5f);
+                glut.glutSolidSphere(0.3, 20, 20);
+                gl.glTranslatef(0, -0.3f, -0.1f);
+                glut.glutSolidSphere(0.2, 20, 20);
+                gl.glTranslatef(0, -0.2f, -0.1f);
+                glut.glutSolidSphere(0.1, 20, 20);
+                gl.glTranslatef(0, -0.075f, -0.075f);
+                glut.glutSolidSphere(0.05, 20, 20);
+            gl.glPopMatrix();
+        }
+    }
+}
+
+class Head{
+    static void stick(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        if(stickFigure){
+            gl.glColor3f(0, 0, 0);
+            gl.glBegin(GL_LINES);
+                gl.glVertex3f(0, 0, 1.5f);
+                gl.glVertex3f(0, 0, 2.25f);
+            gl.glEnd();
+        } else {
+            gl.glColor3f(0.6f, 0, 0);
+            gl.glPushMatrix();
+                gl.glTranslatef(0, 0, 2.15f);
+                glut.glutSolidSphere(0.2, 20, 20);
+            gl.glPopMatrix();
+        }
+    }
+    static void weird(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        if(stickFigure){
+            gl.glColor3f(0, 0, 0);
+            gl.glBegin(GL_LINES);
+                gl.glVertex3f(0, 1, 0.5f);
+                gl.glVertex3f(0, 1.3f, 0.7f);
+                gl.glVertex3f(0, 1.3f, 0.7f);
+                gl.glVertex3f(-0.175f, 1.475f, 0.9f);
+                gl.glVertex3f(0, 1.3f, 0.7f);
+                gl.glVertex3f(0.175f, 1.475f, 0.9f);
+            gl.glEnd();
+        } else {
+            gl.glPushMatrix();
+                gl.glTranslatef(0, 1.3f, 0.7f);
+                gl.glPushMatrix();
+                    gl.glScalef(0.4f, 0.4f, 0.4f);
+                    glut.glutSolidRhombicDodecahedron();
+                gl.glPopMatrix();
+                gl.glPushMatrix();
+                    gl.glTranslatef(-0.175f, 0.175f, 0.2f);
+                    glut.glutSolidSphere(0.15, 20, 20);
+                gl.glPopMatrix();
+                gl.glPushMatrix();
+                    gl.glTranslatef(0.175f, 0.175f, 0.2f);
+                    glut.glutSolidSphere(0.15, 20, 20);
+                gl.glPopMatrix();
+            gl.glPopMatrix();
+        }
+    }
+}
+
+class Torso{
+    static void stick(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        if(stickFigure){
+            //no translation so no stick
+        } else {
+            gl.glColor3f(1f, 0, 0);
+            gl.glPushMatrix();
+                gl.glTranslatef(0, 0, 1.5f);
+                gl.glScalef(0.5f, 0.25f, 1f);
+                glut.glutSolidCube(1f);
+            gl.glPopMatrix();
+        }
+    }
+    static void weird(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        if(stickFigure){
+            gl.glColor3f(0, 0, 0);
+            gl.glBegin(GL_LINES);
+                //body-neck
+                gl.glVertex3f(0, 0, 0.5f);
+                gl.glVertex3f(0, 1, 0.5f);
+            gl.glEnd();
+        } else {
+            gl.glColor3f(0, 1f, 0);
+            gl.glPushMatrix();
+                gl.glTranslatef(0, 0, 0.5f);
+                gl.glScalef(0.3f, 2f, 0.3f);
+                gl.glRotatef(90, 1, 0, 0);
+                glut.glutSolidTorus(0.5f, 1f, 20, 20);
+            gl.glPopMatrix();
+            //neck
+            gl.glPushMatrix();
+                gl.glTranslatef(0, 1, 0.5f);
+                glut.glutSolidSphere(0.3, 20, 20);
+            gl.glPopMatrix();
+            //glut.glutSolidRhombicDodecahedron();
+        }
     }
 }

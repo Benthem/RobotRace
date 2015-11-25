@@ -4,7 +4,6 @@ import javax.media.opengl.GL;
 import static javax.media.opengl.GL.GL_MULTISAMPLE;
 import static javax.media.opengl.GL.GL_NICEST;
 import static javax.media.opengl.GL2.*;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHT0;
 
 /**
  * Handles all of the RobotRace graphics functionality,
@@ -72,6 +71,8 @@ public class RobotRace extends Base {
     
     /** Instance of the terrain. */
     private final Terrain terrain;
+
+    private final boolean light = true;
     
     /**
      * Constructs this robot race by initialising robots,
@@ -84,23 +85,23 @@ public class RobotRace extends Base {
         
         // Initialize robot 0
         robots[0] = new Robot(Material.GOLD,
-                              new Vector(0f, 0f, 0f),
-                              "wall-e");
+                              new Vector(-1.5f, 0f, 0f),
+                              "weird", "weird", "weird", "weird");
         
         // Initialize robot 1
         robots[1] = new Robot(Material.SILVER,
-                              new Vector(0f, 0f, 0f),
-                              "aaa");
+                            new Vector(-0.5f, 0f, 0f),
+                              "weird", "weird", "weird", "weird");
         
         // Initialize robot 2
         robots[2] = new Robot(Material.WOOD,
-                              new Vector(0f, 0f, 0f),
-                              "aaa");
+                              new Vector(0.5f, 0f, 0f),
+                              "weird", "weird", "weird", "weird");
 
         // Initialize robot 3
         robots[3] = new Robot(Material.ORANGE,
-                              new Vector(0f, 0f, 0f),
-                              "aaa");
+                              new Vector(1.5f, 0f, 0f),
+                              "weird", "weird", "weird", "weird");
         
         // Initialize the camera
         camera = new Camera();
@@ -146,23 +147,16 @@ public class RobotRace extends Base {
     public void initialize() {
         
         //Enable Shading
-        
-        float[] lightPos = {2.0f, 0.0f, 3.0f, 0.0f};
-        float[] whiteColor = {1.0f, 1.0f, 1.0f, 1.0f};
-        float[] pinkColor = {1.0f, 0.5f, 0.5f, 1.0f};
-        gl.glShadeModel(GL_SMOOTH); // Use smooth shading
-        gl.glEnable(GL_LIGHTING); // Enable lighting
-        gl.glEnable(GL_LIGHT0); // Enable light source #0
-        gl.glLightfv(GL_LIGHT0, GL_POSITION, lightPos, 1); // position LS 0
-        gl.glLightfv(GL_LIGHT0, GL_AMBIENT, whiteColor, 1); // set color LS 0
-        
-        /*
-        gl.glEnable(GL_LIGHT1); // Enable light source #1
-        gl.glLightfv(GL_LIGHT1, GL_POSITION, lightPos, 1); // position LS 0
-        gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteColor, 1); // set color LS 0
-        */
-        gl.glMaterialfv(GL_FRONT, GL_AMBIENT, pinkColor, 1);
-        
+        if(light) {
+            float[] lightPos = {2.0f, 0.0f, 3.0f, 0.0f};
+            float[] whiteColor = {1.0f, 1.0f, 1.0f, 1.0f};
+            gl.glShadeModel(GL_SMOOTH); // Use smooth shading
+            gl.glEnable(GL_LIGHTING); // Enable lighting
+            gl.glEnable(GL_LIGHT0); // Enable light source #0
+//            gl.glLightfv(GL_LIGHT0, GL_POSITION, lightPos, 1); // position LS 0
+//            gl.glLightfv(GL_LIGHT0, GL_AMBIENT, whiteColor, 1); // set color LS 0
+        }
+
         // Enable blending.
         gl.glEnable(GL_BLEND);
         gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -245,34 +239,20 @@ public class RobotRace extends Base {
         gl.glColor3f(0f, 0f, 0f);
         
         // Get the position and direction of the first robot.
-        robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, 0);
-        robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
-        
-        // Draw the first robot.
-        robots[0].draw(gl, glu, glut, false, gs.tAnim);
+//        robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, 0);
+//        robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
+
+        for(Robot robot: robots){
+            robot.draw(gl, glu, glut, gs.showStick, gs.tAnim);
+        }
+
         
         // Draw the race track.
-        raceTracks[gs.trackNr].draw(gl, glu, glut);
+        //raceTracks[gs.trackNr].draw(gl, glu, glut);
         
         // Draw the terrain.
         terrain.draw(gl, glu, glut);
-        
-        gl.glColor3f(0f, 0f, 0f);
-        
-        // Unit box around origin.
-        glut.glutWireCube(1f);
 
-        // Move in x-direction.
-        gl.glTranslatef(2f, 0f, 0f);
-        
-        // Rotate 30 degrees, around z-axis.
-        gl.glRotatef(30f, 0f, 0f, 1f);
-        
-        // Scale in z-direction.
-        gl.glScalef(1f, 1f, 2f);
-
-        // Translated, rotated, scaled box.
-        glut.glutWireCube(1f);
     }
     
     /**

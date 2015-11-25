@@ -33,6 +33,12 @@ class RaceTrack {
      */
     public void draw(GL2 gl, GLU glu, GLUT glut) {
         if (null == controlPoints) {
+
+            gl.glColor3f(0.1f, 0.5f, 0.1f);
+            gl.glPushMatrix();
+            gl.glScalef(20, 20, 0.01f);
+            glut.glutSolidCube(1);
+            gl.glPopMatrix();
             // draw the test track
         } else {
             // draw the spline track
