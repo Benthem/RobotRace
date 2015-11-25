@@ -50,20 +50,16 @@ class Robot {
             glut.glutSolidCube(1.2f);
         gl.glPopMatrix();
         switch(head) {
-            case "wall-e" : Legs.walle(gl, glu, glut, stickFigure, tAnim);
-                            Arms.walle(gl, glu, glut, stickFigure, tAnim);
+            case "wall-e" : Head.walle(gl, glu, glut, stickFigure, tAnim);
         }
         switch(arms) {
-            case "wall-e" : Legs.walle(gl, glu, glut, stickFigure, tAnim);
-                            Arms.walle(gl, glu, glut, stickFigure, tAnim);
+            case "wall-e" : Arms.walle(gl, glu, glut, stickFigure, tAnim);
         }
         switch(torso) {
-            case "wall-e" : Legs.walle(gl, glu, glut, stickFigure, tAnim);
-                            Arms.walle(gl, glu, glut, stickFigure, tAnim);
+            case "wall-e" : ;
         }
         switch(legs) {
             case "wall-e" : Legs.walle(gl, glu, glut, stickFigure, tAnim);
-                            Arms.walle(gl, glu, glut, stickFigure, tAnim);
         }
         
         
@@ -439,4 +435,8 @@ class Arms{
             gl.glPopMatrix();
         gl.glPopMatrix();
     }
+}
+
+class Head{
+    
 }

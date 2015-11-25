@@ -4,7 +4,6 @@ import javax.media.opengl.GL;
 import static javax.media.opengl.GL.GL_MULTISAMPLE;
 import static javax.media.opengl.GL.GL_NICEST;
 import static javax.media.opengl.GL2.*;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHT0;
 
 /**
  * Handles all of the RobotRace graphics functionality,
@@ -85,22 +84,22 @@ public class RobotRace extends Base {
         // Initialize robot 0
         robots[0] = new Robot(Material.GOLD,
                               new Vector(0f, 0f, 0f),
-                              "wall-e");
+                              "wall-e", "wall-e", "wall-e", "wall-e");
         
         // Initialize robot 1
         robots[1] = new Robot(Material.SILVER,
                               new Vector(0f, 0f, 0f),
-                              "aaa");
+                              "tracks", "aaa", "thin", "aaa");
         
         // Initialize robot 2
         robots[2] = new Robot(Material.WOOD,
                               new Vector(0f, 0f, 0f),
-                              "aaa");
+                              "tracks", "aaa", "thin", "aaa");
 
         // Initialize robot 3
         robots[3] = new Robot(Material.ORANGE,
                               new Vector(0f, 0f, 0f),
-                              "aaa");
+                              "tracks", "aaa", "thin", "aaa");
         
         // Initialize the camera
         camera = new Camera();
@@ -146,7 +145,7 @@ public class RobotRace extends Base {
     public void initialize() {
         
         //Enable Shading
-        
+        /*
         float[] lightPos = {2.0f, 0.0f, 3.0f, 0.0f};
         float[] whiteColor = {1.0f, 1.0f, 1.0f, 1.0f};
         float[] pinkColor = {1.0f, 0.5f, 0.5f, 1.0f};
@@ -155,14 +154,9 @@ public class RobotRace extends Base {
         gl.glEnable(GL_LIGHT0); // Enable light source #0
         gl.glLightfv(GL_LIGHT0, GL_POSITION, lightPos, 1); // position LS 0
         gl.glLightfv(GL_LIGHT0, GL_AMBIENT, whiteColor, 1); // set color LS 0
-        
-        /*
-        gl.glEnable(GL_LIGHT1); // Enable light source #1
-        gl.glLightfv(GL_LIGHT1, GL_POSITION, lightPos, 1); // position LS 0
-        gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteColor, 1); // set color LS 0
-        */
+		
         gl.glMaterialfv(GL_FRONT, GL_AMBIENT, pinkColor, 1);
-        
+        */
         // Enable blending.
         gl.glEnable(GL_BLEND);
         gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
