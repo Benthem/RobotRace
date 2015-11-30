@@ -39,7 +39,12 @@ public enum Material {
     ORANGE (
         new float[] {0.8f, 0.8f, 0.8f, 1.0f},
         new float[] {0.0f, 0.0f, 0.0f, 1.0f},
-        0f);
+        0f),
+    
+    RUBY (
+        new float[] {0.8f, 0.0f, 0.0f, 0.95f},
+        new float[] {0.3f, 0.0f, 0.0f, 0.95f},
+        25f);
 
     /** The diffuse RGBA reflectance of the material. */
     float[] diffuse;

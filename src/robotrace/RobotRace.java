@@ -4,6 +4,7 @@ import javax.media.opengl.GL;
 import static javax.media.opengl.GL.GL_MULTISAMPLE;
 import static javax.media.opengl.GL.GL_NICEST;
 import static javax.media.opengl.GL2.*;
+import java.nio.FloatBuffer;
 
 /**
  * Handles all of the RobotRace graphics functionality,
@@ -97,9 +98,9 @@ public class RobotRace extends Base {
                               "tracks", "aaa", "thin", "aaa");
 
         // Initialize robot 3
-        robots[3] = new Robot(Material.ORANGE,
+        robots[3] = new Robot(Material.RUBY,
                               new Vector(0f, 0f, 0f),
-                              "tracks", "aaa", "thin", "aaa");
+                              "Scorpiant", "Scorpiant", "Scorpiant", "Scorpiant");
         
         // Initialize the camera
         camera = new Camera();
@@ -145,18 +146,22 @@ public class RobotRace extends Base {
     public void initialize() {
         
         //Enable Shading
-        /*
-        float[] lightPos = {2.0f, 0.0f, 3.0f, 0.0f};
-        float[] whiteColor = {1.0f, 1.0f, 1.0f, 1.0f};
-        float[] pinkColor = {1.0f, 0.5f, 0.5f, 1.0f};
+        
+        float[] lightpos = {2.0f, 5.0f, 3.0f, 1.0f};
+        float[] ambientLight = {0.2f, 0.2f, 0.2f, 1f,};
+        float[] whiteColor = {0.2f, 0.2f, 0.2f, 1f};
+        float[] apecularLight = {0.4f, 0.4f, 0.4f, 1f};
         gl.glShadeModel(GL_SMOOTH); // Use smooth shading
         gl.glEnable(GL_LIGHTING); // Enable lighting
         gl.glEnable(GL_LIGHT0); // Enable light source #0
-        gl.glLightfv(GL_LIGHT0, GL_POSITION, lightPos, 1); // position LS 0
-        gl.glLightfv(GL_LIGHT0, GL_AMBIENT, whiteColor, 1); // set color LS 0
+        gl.glEnable(GL_LIGHT1); // Enable light source #0
+        gl.glLightfv(GL_LIGHT0, GL_AMBIENT, FloatBuffer.wrap(ambientLight)); // set color LS 0
+ 
+        gl.glLightfv(GL_LIGHT1, GL_POSITION, FloatBuffer.wrap(lightpos)); // position LS 0
+        gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, FloatBuffer.wrap(whiteColor)); // set color LS 0
+        gl.glLightfv(GL_LIGHT1, GL_SPECULAR, FloatBuffer.wrap(apecularLight)); // set color LS 0
 		
-        gl.glMaterialfv(GL_FRONT, GL_AMBIENT, pinkColor, 1);
-        */
+        
         // Enable blending.
         gl.glEnable(GL_BLEND);
         gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -239,11 +244,11 @@ public class RobotRace extends Base {
         gl.glColor3f(0f, 0f, 0f);
         
         // Get the position and direction of the first robot.
-        robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, 0);
-        robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
+        robots[3].position = raceTracks[gs.trackNr].getLanePoint(0, 0);
+        robots[3].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
         
         // Draw the first robot.
-        robots[0].draw(gl, glu, glut, false, gs.tAnim);
+        robots[3].draw(gl, glu, glut, false, gs.tAnim);
         
         // Draw the race track.
         raceTracks[gs.trackNr].draw(gl, glu, glut);

@@ -4,6 +4,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import javax.media.opengl.GL2;
 import static javax.media.opengl.GL2GL3.*;
 import javax.media.opengl.glu.GLU;
+import java.nio.FloatBuffer;
 
 /**
 * Represents a Robot, to be implemented according to the Assignments.
@@ -21,6 +22,7 @@ class Robot {
     
     /** The parts of the Robot **/
     private String head, arms, torso, legs;
+    
 
     /**
      * Constructs the robot with initial parameters.
@@ -41,29 +43,39 @@ class Robot {
      * Draws this robot (as a {@code stickfigure} if specified).
      */
     public void draw(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim) {
-        gl.glPushMatrix();
-        
-        gl.glColor3f(1f, 0f, 1f);
         gl.glTranslated(position.x(), position.y(), position.z());
-        gl.glPushMatrix();
-            gl.glScalef(1f, 1f, 1.5f);
-            glut.glutSolidCube(1.2f);
-        gl.glPopMatrix();
+        gl.glMaterialfv(GL_FRONT_AND_BACK, gl.GL_DIFFUSE, FloatBuffer.wrap(material.diffuse));
+        gl.glMaterialfv(GL_FRONT_AND_BACK, gl.GL_SPECULAR, FloatBuffer.wrap(material.specular));
+        gl.glMaterialf(GL_FRONT_AND_BACK, gl.GL_SHININESS, material.shininess);
+        
         switch(head) {
+            case "NA" : break;
             case "wall-e" : Head.walle(gl, glu, glut, stickFigure, tAnim);
+                            break;
+            case "Scorpiant" :  Head.scorpiant(gl, glu, glut, stickFigure, tAnim);
+                                break;
         }
         switch(arms) {
+            case "NA" : break;
             case "wall-e" : Arms.walle(gl, glu, glut, stickFigure, tAnim);
+                            break;
+            case "Scorpiant" :  Arms.scorpiant(gl, glu, glut, stickFigure, tAnim);
+                                break;
         }
         switch(torso) {
-            case "wall-e" : ;
+            case "NA" : break;
+            case "wall-e" : Torso.walle(gl, glu, glut, stickFigure, tAnim);
+                            break;
+            case "Scorpiant" :  Torso.scorpiant(gl, glu, glut, stickFigure, tAnim);
+                                break;
         }
         switch(legs) {
+            case "NA" : break;
             case "wall-e" : Legs.walle(gl, glu, glut, stickFigure, tAnim);
+                            break;
+            case "Scorpiant" :  Legs.scorpiant(gl, glu, glut, stickFigure, tAnim);
+                                break;
         }
-        
-        
-        gl.glPopMatrix();
     }
 }
 
@@ -352,6 +364,46 @@ class Legs{
             gl.glPopMatrix();
         gl.glPopMatrix();
     }
+    static void scorpiant(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        //legs
+            gl.glPushMatrix();
+                gl.glTranslatef(0f, -4.5f, 0f);
+                gl.glTranslatef(0f, 1.5f, 2f);
+                for(int i = 1; i < 6; i++){
+                    if(i != 3){
+                        gl.glPushMatrix();
+                            gl.glTranslatef(0f, 1f*i, 0f);
+                            gl.glRotatef(60f, 0f, 1f, 0f);
+
+                            glu.gluCylinder(glu.gluNewQuadric(), 0.15f, 0.15f, 2f, 24, 1);
+
+                            gl.glTranslatef(0f, 0.0f, 2f);
+                            glut.glutSolidSphere(0.15f, 25, 25);
+
+                            gl.glRotatef(110f, 0f, 1f, 0f);
+                            glu.gluCylinder(glu.gluNewQuadric(), 0.15f, 0f, 3.0463f, 24, 1);
+                        gl.glPopMatrix();
+                    }
+                }
+                gl.glScalef(-1f, 1f, 1f);
+                for(int i = 1; i < 6; i++){
+                    if(i != 3){
+                        gl.glPushMatrix();
+                            gl.glTranslatef(0f, 1f*i, 0f);
+                            gl.glRotatef(60f, 0f, 1f, 0f);
+
+                            glu.gluCylinder(glu.gluNewQuadric(), 0.15f, 0.15f, 2f, 24, 1);
+
+                            gl.glTranslatef(0f, 0.0f, 2f);
+                            glut.glutSolidSphere(0.15f, 25, 25);
+
+                            gl.glRotatef(110f, 0f, 1f, 0f);
+                            glu.gluCylinder(glu.gluNewQuadric(), 0.15f, 0f, 3.0463f, 24, 1);
+                        gl.glPopMatrix();
+                    }
+                }
+            gl.glPopMatrix();
+    }
 }
 
 class Arms{
@@ -435,8 +487,137 @@ class Arms{
             gl.glPopMatrix();
         gl.glPopMatrix();
     }
+    static void scorpiant(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        //Lasertail
+        gl.glPushMatrix();
+            gl.glTranslatef(0f, -4.5f, 0f);
+            gl.glTranslatef(0f, 1.5f, 2f);
+            glut.glutSolidSphere(0.4f, 7, 7);
+
+            gl.glRotatef(20f, 1f, 0f, 0f);
+            glu.gluCylinder(glu.gluNewQuadric(), 0.3f, 0.3f, 2f, 5, 1);
+
+            gl.glTranslatef(0f, 0f, 2f);
+            glut.glutSolidSphere(0.4f, 7, 7);
+
+            gl.glRotatef(80f, -1f, 0f, 0f);
+            glu.gluCylinder(glu.gluNewQuadric(), 0.3f, 0.3f, 4f, 5, 1);
+
+            gl.glTranslatef(0f, 0f, 4f);
+            gl.glRotatef(40f, -1f, 0f, 0f);
+            glut.glutSolidSphere(0.4f, 5, 5);
+            gl.glTranslatef(0f, 0f, 0.3f);
+            glu.gluCylinder(glu.gluNewQuadric(), 0.1f, 0.0f, 0.3f, 5, 1);
+        gl.glPopMatrix();
+    }
 }
 
 class Head{
-    
+    static void walle(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        gl.glPushMatrix();
+            gl.glColor3f(1f, 0.6f, 0.2f);
+            
+            gl.glTranslatef(0f, 0f, 0.8f);
+            gl.glPushMatrix();
+                gl.glRotatef(-30f, 1f, 0f, 0f);
+                gl.glScalef(1f, 1f, 2f);
+                gl.glTranslatef(0f, 0f, 0.1f);
+                glut.glutSolidCube(0.3f);
+            gl.glPopMatrix();
+            
+            gl.glTranslatef(0.3f, 0.0866025f, 0.2f);
+            gl.glRotatef(-90f, 0f, 1f, 0f);
+            glu.gluCylinder(glu.gluNewQuadric(),
+                            0.15,
+                            0.15,
+                            0.15,
+                            20,
+                            1);
+
+        gl.glPopMatrix();
+    }
+    static void scorpiant(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        //Head
+            gl.glPushMatrix();
+                gl.glTranslatef(0f, -4.5f, 0f);
+                gl.glTranslatef(0f, 8f, 3f);
+                
+                glut.glutSolidSphere(0.75f, 20, 20);
+                
+                //antenae
+                gl.glPushMatrix();
+                    gl.glColor3f(0f, 0.8f, 0f);
+                    gl.glRotatef(30f, 0f, 0f, 1f);
+                    gl.glRotatef(45f, -1f, 0f, 0f);
+                    gl.glTranslatef(0f, 0f, 0.7f);
+                    glu.gluCylinder(glu.gluNewQuadric(), 0.1f, 0.1f, 0.5f, 24, 1);
+                    gl.glTranslatef(0f, 0f, 0.5f);
+                    glut.glutSolidSphere(0.2f, 5, 5);
+                gl.glPopMatrix();
+                gl.glScalef(-1f, 1f, 1f);
+                gl.glPushMatrix();
+                    gl.glRotatef(30f, 0f, 0f, 1f);
+                    gl.glRotatef(45f, -1f, 0f, 0f);
+                    gl.glTranslatef(0f, 0f, 0.7f);
+                    glu.gluCylinder(glu.gluNewQuadric(), 0.1f, 0.1f, 0.5f, 24, 1);
+                    gl.glTranslatef(0f, 0f, 0.5f);
+                    glut.glutSolidSphere(0.2f, 5, 5);
+                gl.glPopMatrix();
+                
+                //eyes
+                gl.glPushMatrix();
+                    gl.glColor3f(1f, 0f, 0f);
+                    gl.glRotatef(45f, 0f, 0f, 1f);
+                    gl.glTranslatef(0f, 0.8f, 0f);
+                    glut.glutSolidSphere(0.2f, 5, 5);
+                gl.glPopMatrix();
+                gl.glScalef(-1f, 1f, 1f);
+                gl.glPushMatrix();
+                    gl.glColor3f(1f, 0f, 0f);
+                    gl.glRotatef(45f, 0f, 0f, 1f);
+                    gl.glTranslatef(0f, 0.8f, 0f);
+                    glut.glutSolidSphere(0.2f, 5, 5);
+                gl.glPopMatrix();
+            gl.glPopMatrix();
+    }
+}
+
+class Torso{
+    static void walle(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        gl.glColor3f(1f, 0f, 1f);
+        
+        gl.glPushMatrix();
+            gl.glScalef(1f, 1f, 1.5f);
+            glut.glutSolidCube(1.2f);
+        gl.glPopMatrix();
+    }
+    static void scorpiant(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        gl.glPushMatrix();
+        gl.glTranslatef(0f, -4.5f, 0f);
+            //Body
+            gl.glPushMatrix();
+                gl.glTranslatef(0f, 3f, 2f);
+                gl.glScalef(1f, 1.5f, 1f);
+                
+                glut.glutSolidSphere(1f, 20, 5);
+                
+                gl.glTranslatef(0f, 2f, 0f);
+                glut.glutSolidSphere(1f, 20, 4);
+            gl.glPopMatrix();
+            
+            gl.glPushMatrix();
+                gl.glTranslatef(0f, 3f, 2f);
+                gl.glRotatef(-90f, 1f, 0f, 0f);
+                
+                glu.gluCylinder(glu.gluNewQuadric(), 0.5f, 0.5f, 3f, 24, 1);
+            gl.glPopMatrix();
+            
+            gl.glPushMatrix();
+                gl.glTranslatef(0f, 7f, 2f);
+                gl.glRotatef(-45f, 1f, 0f, 0f);
+                
+                glu.gluCylinder(glu.gluNewQuadric(), 0.3f, 0.3f, 1.5f, 24, 1);
+            gl.glPopMatrix();
+        gl.glPopMatrix();
+    }
 }
