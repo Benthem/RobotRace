@@ -35,7 +35,7 @@ class Robot {
         this.arms = arms;
         this.torso = torso;
         this.legs = legs;
-        
+
     }
 
     /**

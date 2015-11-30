@@ -13,7 +13,7 @@ public enum Material {
         new float[] {0.75f, 0.60f, 0.22f, 1.0f},
         new float[] {0.62f, 0.55f, 0.36f, 1.0f},
             5.12f),
-
+ 
     /**
      * Silver material properties.
      * Modify the default values to make it look like silver.
